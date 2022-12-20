@@ -30,9 +30,10 @@ export default function MkdSDK() {
     if (!response.ok) {
       throw new Error('Password or email may be invalid');
     }
-    const { token } = await response.json();
-    localStorage.setItem('token', token);
-    return response;
+    const data = await response.json();
+    localStorage.setItem('token', data.token);
+
+    return data;
   };
 
   this.getHeader = function () {
