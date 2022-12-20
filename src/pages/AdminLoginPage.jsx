@@ -30,7 +30,7 @@ const AdminLoginPage = () => {
 
     let sdk = new MkdSDK();
     const res = await sdk.login(data.email, data.password, 'admin');
-    console.log(res);
+    console.log('res', res);
     // dispatch({ type: 'login' });
     // navigate('/admin/dashboard');
   };

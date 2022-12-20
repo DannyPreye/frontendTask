@@ -110,7 +110,7 @@ export default function MkdSDK() {
     const checkToken = localStorage.getItem('token');
     if (!checkToken) return false;
 
-    const res = await fetch(this._baseurl + '/check', {
+    const res = await fetch(this._baseurl + '/v2/api/lambda/check', {
       method: 'POST',
       headers: this.getHeader(),
       body: JSON.stringify(role),
