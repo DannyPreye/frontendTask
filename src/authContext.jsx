@@ -53,6 +53,22 @@ const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     //TODO
+    // Retieve the token user and role from the localstorage and login
+
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    const user = localStorage.getItem('user');
+
+    if (token && role && user) {
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          token,
+          role,
+          user: user,
+        },
+      });
+    }
   }, []);
 
   return (
