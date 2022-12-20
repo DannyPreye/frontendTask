@@ -2,12 +2,14 @@ import React from 'react';
 import { BiUser } from 'react-icons/bi';
 import { AuthContext } from '../authContext';
 import MkdSDK from '../utils/MkdSDK';
+import VideoCard from '../components/VideoCard';
 
 const AdminDashboardPage = () => {
   const { dispatch } = React.useContext(AuthContext);
   const [videos, setVideos] = React.useState([]);
   const [totalNumber, setTotalNumber] = React.useState(0);
   const PER_PAGE = 10;
+  const sdk = new MkdSDK();
 
   const handleLogout = () => {
     dispatch({
@@ -16,7 +18,9 @@ const AdminDashboardPage = () => {
   };
 
   React.useEffect(() => {
-    const fetVideos = () => {};
+    const fetchTotalVideos = async () => {
+      const res = sdk.callRestAPI();
+    };
   }, [videos]);
 
   return (
@@ -44,6 +48,8 @@ const AdminDashboardPage = () => {
           <span className='w-[4px] h-[4px] bg-white rounded-full' />
           <p className='text-white font-[100] text-[16px]'>11:34</p>
         </div>
+
+        <div>{}</div>
       </div>
     </div>
   );
