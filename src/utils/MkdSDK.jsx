@@ -15,20 +15,24 @@ export default function MkdSDK() {
 
   this.login = async function (email, password, role) {
     //TODO
-    const response = await fetch(this.baseUrl + '/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-project': base64Encode,
-      },
-      body: JSON.stringify({ email, password, role }),
-    });
+    const response = await fetch(
+      'https://reacttask.mkdlabs.com/v2/api/lambda' + '/login',
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-project': base64Encode,
+        },
+        body: JSON.stringify({ email, password, role }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Password or email may be invalid');
     }
     const { token } = await response.json();
     localStorage.setItem('token', token);
+    return response;
   };
 
   this.getHeader = function () {
