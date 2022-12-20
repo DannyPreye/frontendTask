@@ -6,6 +6,8 @@ import MkdSDK from '../utils/MkdSDK';
 const AdminDashboardPage = () => {
   const { dispatch } = React.useContext(AuthContext);
   const [videos, setVideos] = React.useState([]);
+  const [totalNumber, setTotalNumber] = React.useState(0);
+  const PER_PAGE = 10;
 
   const handleLogout = () => {
     dispatch({
@@ -13,7 +15,9 @@ const AdminDashboardPage = () => {
     });
   };
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    const fetVideos = () => {};
+  }, [videos]);
 
   return (
     <div className=' bg-background font-inter '>
