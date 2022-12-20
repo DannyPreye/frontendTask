@@ -16,7 +16,7 @@ const AdminLoginPage = () => {
     .required();
 
   const { dispatch } = React.useContext(AuthContext);
-  const { distpatch: globalDispatch } = React.useContext(GlobalContext);
+  const { dispatch: globalDispatch } = React.useContext(GlobalContext);
   const navigate = useNavigate();
   const {
     register,
