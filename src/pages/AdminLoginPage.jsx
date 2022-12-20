@@ -27,9 +27,14 @@ const AdminLoginPage = () => {
 
   const onSubmit = async (data) => {
     let sdk = new MkdSDK();
-
     //TODO
-    console.log(sdk.getHeader());
+    try {
+      await sdk.login(...data, 'admin');
+      dispatch({ type: 'login' });
+      navigate('/admin/dashboard');
+    } catch (error) {
+      setError('email', { message: error.message });
+    }
   };
 
   return (
