@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import MkdSDK from '../utils/MkdSDK';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../authContext';
+import { GlobalContext } from '../globalContext';
 
 const AdminLoginPage = () => {
   const schema = yup
@@ -15,6 +16,7 @@ const AdminLoginPage = () => {
     .required();
 
   const { dispatch } = React.useContext(AuthContext);
+  const { distpatch: globalDispatch } = React.useContext(GlobalContext);
   const navigate = useNavigate();
   const {
     register,
@@ -27,12 +29,32 @@ const AdminLoginPage = () => {
 
   const onSubmit = async (data) => {
     //TODO
-
     let sdk = new MkdSDK();
-    const res = await sdk.login(data.email, data.password, 'admin');
-    console.log('res', res.token);
-    // dispatch({ type: 'login' });
-    // navigate('/admin/dashboard');
+    try {
+      const response = await sdk.login(data.email, data.password, 'admin');
+
+      if (!response.error) {
+        dispatch({
+          type: 'LOGIN',
+          payload: {
+            token: response.token,
+            role: 'admin',
+            user: response.user,
+          },
+        });
+        // Display Snackbar on successful login
+        globalDispatch({
+          type: 'SNACKBAR',
+          payload: { message: 'You are logged in' },
+        });
+        // Redirect user to admin dashboard
+        navigate('/admin/dashboard');
+      } else {
+        setError('loginError', 'InvalidCredentials', 'There is an error');
+      }
+    } catch (error) {
+      setError('loginError', 'invalidCredentials', error.message);
+    }
   };
 
   return (

@@ -31,7 +31,6 @@ export default function MkdSDK() {
       throw new Error('Password or email may be invalid');
     }
     const data = await response.json();
-    localStorage.setItem('token', data.token);
 
     return data;
   };
@@ -118,8 +117,8 @@ export default function MkdSDK() {
     });
 
     if (!res.ok) {
-      return false;
       localStorage.removeItem('token');
+      return false;
     }
 
     return true;
