@@ -19,6 +19,7 @@ export default function MkdSDK() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-project': base64Encode,
       },
       body: JSON.stringify({ email, password, role }),
     });
@@ -101,6 +102,22 @@ export default function MkdSDK() {
 
   this.check = async function (role) {
     //TODO
+    // get token to check if it's still valid
+    const checkToken = localStorage.getItem('token');
+    if (!checkToken) return false;
+
+    const res = await fetch(this._baseurl + '/check', {
+      method: 'POST',
+      headers: this.getHeader(),
+      body: JSON.stringify(role),
+    });
+
+    if (!res.ok) {
+      return false;
+      localStorage.removeItem('token');
+    }
+
+    return true;
   };
 
   return this;
