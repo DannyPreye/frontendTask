@@ -82,7 +82,7 @@ export default function MkdSDK() {
           payload.limit = 10;
         }
         const paginateResult = await fetch(
-          this._baseurl + `/v1/api/rest/${this._table}/${method}`,
+          this._baseurl + `/v1/api/rest/video/PAGINATE`,
           {
             method: 'post',
             headers: header,
