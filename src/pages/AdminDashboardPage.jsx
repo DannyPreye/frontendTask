@@ -4,8 +4,10 @@ import { AuthContext } from '../authContext';
 import MkdSDK from '../utils/MkdSDK';
 import VideoCard from '../components/VideoCard';
 import { useDrop } from 'react-dnd';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboardPage = () => {
+  const navigate = useNavigate();
   const { dispatch } = React.useContext(AuthContext);
   const [videos, setVideos] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -33,6 +35,7 @@ const AdminDashboardPage = () => {
     dispatch({
       type: 'LOGOUT',
     });
+    navigate('/admin/login');
   };
 
   React.useEffect(() => {
