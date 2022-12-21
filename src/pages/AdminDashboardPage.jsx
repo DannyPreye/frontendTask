@@ -3,7 +3,7 @@ import { BiUser } from 'react-icons/bi';
 import { AuthContext } from '../authContext';
 import MkdSDK from '../utils/MkdSDK';
 import VideoCard from '../components/VideoCard';
-import { data } from 'autoprefixer';
+import { useDrop } from 'react-dnd';
 
 const AdminDashboardPage = () => {
   const { dispatch } = React.useContext(AuthContext);
@@ -11,6 +11,21 @@ const AdminDashboardPage = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
   const PER_PAGE = 10;
+  const ref = React.useRef();
+
+  const [, drop] = useDrop({
+    accept: 'Row',
+    drop: (item) => {
+      const newVideos = videos;
+      const [removed] = newVideos.splice(item.index, 1);
+      newVideos.splice(videos.length, 0, removed);
+      setVideos(newVideos);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
 
   const sdk = new MkdSDK();
 
@@ -33,9 +48,6 @@ const AdminDashboardPage = () => {
     }
     fetchData();
   }, [currentPage]);
-
-  console.log(currentPage);
-  console.log(totalPages);
 
   return (
     <div className=' bg-background font-inter '>
@@ -74,14 +86,16 @@ const AdminDashboardPage = () => {
             <p>Author</p>
             <p>Most Liked</p>
           </div>
-          <div className='flex flex-col gap-[10px] mt-[16px]'>
-            {videos.map((video) => (
+          <div ref={drop(ref)} className='flex flex-col gap-[10px] mt-[16px]'>
+            {videos.map((video, index) => (
               <VideoCard
+                key={video.id}
                 img={video.photo}
                 id={video.id}
                 title={video.title}
                 likes={video.like}
                 user={video.username}
+                index={index}
               />
             ))}
           </div>
@@ -89,8 +103,10 @@ const AdminDashboardPage = () => {
 
         <div className=' flex items-center justify-between mt-[36px]'>
           <button
-            className={`px-4 py-2 rounded-full  text-white ${
-              currentPage <= 1 ? 'bg-gray-800' : 'bg-light-green'
+            className={`px-4 py-2 w-24 rounded-full   ${
+              currentPage <= 1
+                ? 'bg-gray-500 text-gray-400 '
+                : 'bg-light-green text-black'
             }`}
             disabled={currentPage <= 1}
             onClick={() => {
@@ -101,8 +117,10 @@ const AdminDashboardPage = () => {
           </button>
           <button
             disabled={currentPage >= totalPages}
-            className={`px-4 py-2 rounded-full  text-white ${
-              currentPage == totalPages ? 'bg-gray-800' : 'bg-light-green'
+            className={`px-4 py-2 w-24 rounded-full   ${
+              currentPage == totalPages
+                ? 'bg-gray-500 text-gray-400 '
+                : 'bg-light-green text-black'
             }`}
             onClick={() => {
               currentPage <= totalPages && setCurrentPage(currentPage + 1);

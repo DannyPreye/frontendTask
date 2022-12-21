@@ -117,7 +117,7 @@ export default function MkdSDK() {
     });
 
     if (!res.ok) {
-      localStorage.removeItem('token');
+      // localStorage.removeItem('token');
       return false;
     }
 

@@ -1,8 +1,21 @@
 import React from 'react';
 import { AiOutlineArrowUp } from 'react-icons/ai';
-const VideoCard = ({ id, img, title, likes, user }) => {
+import { useDrag } from 'react-dnd';
+
+const VideoCard = ({ id, img, title, likes, user, index }) => {
+  const [{}, dragRef] = useDrag(() => ({
+    type: 'Row',
+    item: { type: 'VIDEO_CARD', id, index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
   return (
-    <div className='flex justify-between  w-full rounded-[16px] border-[1px] border-gray py-[39px] px-[24px] text-[#666666]'>
+    <div
+      ref={dragRef}
+      className='flex justify-between  w-full rounded-[16px] border-[1px] border-gray py-[39px] px-[24px] text-[#666666]'
+    >
       <div className='flex gap-[16px ] items-center   gap-[28px]'>
         <span>{id}</span>
         <img
