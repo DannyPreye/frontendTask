@@ -1,19 +1,61 @@
 import React from 'react';
 import { AiOutlineArrowUp } from 'react-icons/ai';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 
-const VideoCard = ({ id, img, title, likes, user, index }) => {
-  const [{}, dragRef] = useDrag(() => ({
+const VideoCard = ({ id, img, title, likes, user, index, moveCard }) => {
+  const ref = React.useRef(null);
+  const [{ handlerId }, drop] = useDrop({
+    accept: 'Row',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      const clientOffset = monitor.getClientOffset();
+
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+      moveCard(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+  const [{ isDragging }, drag] = useDrag({
     type: 'Row',
-    item: { type: 'VIDEO_CARD', id, index },
+    item: () => {
+      return { id, index };
+    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-  }));
-
+  });
+  const opacity = isDragging ? 0 : 1;
+  drag(drop(ref));
   return (
     <div
-      ref={dragRef}
+      ref={ref}
       className='flex justify-between  w-full rounded-[16px] border-[1px] border-gray py-[39px] px-[24px] text-[#666666]'
     >
       <div className='flex gap-[16px ] items-center   gap-[28px]'>

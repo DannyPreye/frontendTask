@@ -1,4 +1,5 @@
 import React from 'react';
+import update from 'immutability-helper';
 import { BiUser } from 'react-icons/bi';
 import { AuthContext } from '../authContext';
 import MkdSDK from '../utils/MkdSDK';
@@ -15,19 +16,16 @@ const AdminDashboardPage = () => {
   const PER_PAGE = 10;
   const ref = React.useRef();
 
-  const [, drop] = useDrop({
-    accept: 'Row',
-    drop: (item) => {
-      const newVideos = videos;
-      const [removed] = newVideos.splice(item.index, 1);
-      newVideos.splice(videos.length, 0, removed);
-      setVideos(newVideos);
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
+  const moveCard = React.useCallback((dragIndex, hoverIndex) => {
+    setVideos((prevCards) =>
+      update(prevCards, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, prevCards[dragIndex]],
+        ],
+      })
+    );
+  }, []);
 
   const sdk = new MkdSDK();
 
@@ -89,7 +87,7 @@ const AdminDashboardPage = () => {
             <p>Author</p>
             <p>Most Liked</p>
           </div>
-          <div ref={drop(ref)} className='flex flex-col gap-[10px] mt-[16px]'>
+          <div className='flex flex-col gap-[10px] mt-[16px]'>
             {videos.map((video, index) => (
               <VideoCard
                 key={video.id}
@@ -99,6 +97,7 @@ const AdminDashboardPage = () => {
                 likes={video.like}
                 user={video.username}
                 index={index}
+                moveCard={moveCard}
               />
             ))}
           </div>

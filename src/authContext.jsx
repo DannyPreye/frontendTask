@@ -41,13 +41,15 @@ let sdk = new MkdSDK();
 export const tokenExpireError = async (dispatch, errorMessage) => {
   const role = localStorage.getItem('role');
   const res = await sdk.check(role);
+  if (errorMessage === 'TOKEN_EXPIRED') {
+    dispatch({
+      type: 'Logout',
+    });
+
+    window.location.href = '/' + role + '/login';
+  }
   if (!res) {
-    if (errorMessage === 'TOKEN_EXPIRED') {
-      dispatch({
-        type: 'Logout',
-      });
-      window.location.href = '/' + role + '/login';
-    }
+    window.location.href = '/' + role + '/login';
   }
 };
 
